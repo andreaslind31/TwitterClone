@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple twitter clone</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css"
+        integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
+    <!-- Axios CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.0/axios.min.js"
+        integrity="sha512-DZqqY3PiOvTP9HkjIWgjO6ouCbq+dxqWoJZ/Q+zPYNHmlnI2dQnbJ5bxAHpAMw+LXRm4D72EIRXzvcHQtE8/VQ=="
+        crossorigin="anonymous"></script>
+    <!-- development version, includes helpful console warnings -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css"
+        integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="app">
+        <div class="card">
+            <i class="fab fa-twitter fa-lg fa-fw"></i>
+            <!-- Register an account -->
+            <div class="register" v-if="!registered">
+                <button form="register" type="submit">Register</button>
+                <h2>Create your account</h2>
+                <form id="register" v-on:submit.prevent="registerAccount">
+                    <div class="form_group">
+                        <label for="name">Name
+                            <span> {{ name.length + '/' + max_length }}</span>
+                        </label>
+                        <input type="text" v-model="name" :maxlength="max_length" required>
+                    </div>
+                    <div class="form_group">
+                        <label for="email">Email
+                            <span> {{ email.length + '/' + max_length }}</span>
+                        </label>
+                        <input type="email" v-model="email" :maxlength="max_length" required>
+                    </div>
+                    <div class="form_group">
+                        <label for="password">Password
+                            <span> {{ password.length + '/' + max_pass_length }}</span>
+                        </label>
+                        <input type="password" v-model="password" :maxlength="max_pass_length" required>
+                    </div>
+                </form>
+
+
+                <div v-if="error.length > 0"> {{error}}</div>
+            </div>
+            <!-- Add tweet -->
+            <div class="tweetBox" v-else>
+                <h2>Welcome {{ userData.name }} write your first Tweet</h2>
+                <form v-on:submit.prevent="sendTweet">
+                    <div class="form_group">
+                        <label for="tweet">
+                            Send your tweet
+                            <span> {{ tweetMsg.length + '/' + max_tweet }}</span>
+                        </label>
+                        <textarea name="tweet" id="tweet" cols="30" rows="10" v-model="tweetMsg"
+                            maxlength="200"></textarea>
+                    </div>
+                    <button type="submit">Tweet</button>
+                </form>
+
+            </div>
+            <!-- Show all tweets -->
+            <div class="card_tweets">
+                <section class="tweets" v-if="tweets.length > 0">
+                    <h2>Tweets</h2>
+                    <div class="tweetMsg" v-for="(tweet, index) in tweets">
+                        <p>
+                            {{tweet.text}}
+                        </p>
+
+                        <div class="tweetDate">
+                            <i class="fas fa-calendar-alt fa-sm fa-fw"></i>{{tweet.date}}
+                        </div>
+                        <div class="tweet_remove" @click="removeTweet(index)">
+                            <span class="remove">Delete this tweet <i class="fas fa-trash fa-xs fa-fw"></i></span>
+                        </div>
+                    </div>
+
+                </section>
+                <div v-else>No tweets to show</div>
+            </div>
+        </div>
+
+    </div>
+    <script src="./main.js"></script>
+</body>
+
+</html>
