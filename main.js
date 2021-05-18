@@ -1,4 +1,22 @@
 
+Vue.component('tweet-message', {
+    props: {
+        'tweet': Object
+    },
+    template:`
+    <div class="tweetMsg">
+        <p>
+            {{ tweet.text}}
+        </p>
+        <div class="tweetDate">
+            <i class="fas fa-calendar fa-sm fa-fw"></i>{{ tweet.date }}
+        </div>
+        <div class="tweet_remove" @click="$emit('remove-tweet', 'index')">
+            <span class="remove">Delete this tweet <i class="fas fa-trash fa-sm fa-fw"></i></span>
+        </div>
+    </div>`
+});
+
 
 let app = new Vue({
     el: '#app',
@@ -28,18 +46,13 @@ let app = new Vue({
                     this.userData.password = this.password
                 this.registered = true;
 
-
-
             } else {
-                this.error = "Complete all the form fields"
+                this.error = "Complete all fields"
             }
 
-            /* Add registration data to the local storage */
             localStorage.setItem('simple_tweet_registered', true)
-            /* Add the whole userData object as JSON string */
             localStorage.setItem('simple_tweet_registered_user', JSON.stringify(this.userData))
 
-            /* Clear the registration inputs */
             this.name = "";
             this.email = "";
             this.password = "";
@@ -53,31 +66,25 @@ let app = new Vue({
 
             );
             this.tweetMsg = "";
-
-            //console.log(this.tweets);
+            // tranform the tweets to a JSON
             stringTweets = JSON.stringify(this.tweets)
-            //console.log(stringTweets);
             localStorage.setItem('simple_tweet_tweets', stringTweets)
         },
         removeTweet(index) {
             let removeIt = confirm("Are you sure you want to remove this tweet?")
             if (removeIt) {
                 this.tweets.splice(index, 1);
-                /* Remove the item also from the local storage */
                 localStorage.simple_tweet_tweets = JSON.stringify(this.tweets)
             }
         }
     },
     created() {
-        /* Check if the user is registered and set the registered to true */
         if (localStorage.getItem("simple_tweet_registered") === 'true') {
             this.registered = true;
         }
-
         if (localStorage.getItem('simple_tweet_registered_user')) {
             this.userData = JSON.parse(localStorage.getItem('simple_tweet_registered_user'))
         }
-        /* Parse all tweets from the local storage  */
         if (localStorage.getItem("simple_tweet_tweets")) {
             console.log("There is a list of tweets");
             this.tweets = JSON.parse(localStorage.getItem('simple_tweet_tweets'))

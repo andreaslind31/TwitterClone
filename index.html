@@ -22,6 +22,7 @@
     <div id="app">
         <div class="card">
             <i class="fab fa-twitter fa-lg fa-fw"></i>
+            
             <!-- Register an account -->
             <div class="register" v-if="!registered">
                 <button form="register" type="submit">Register</button>
@@ -31,25 +32,24 @@
                         <label for="name">Name
                             <span> {{ name.length + '/' + max_length }}</span>
                         </label>
-                        <input type="text" v-model="name" :maxlength="max_length" required>
+                        <input type="text" name="name" id="name" v-model="name" :maxlength="max_length" required>
                     </div>
                     <div class="form_group">
                         <label for="email">Email
                             <span> {{ email.length + '/' + max_length }}</span>
                         </label>
-                        <input type="email" v-model="email" :maxlength="max_length" required>
+                        <input type="email" name="email" id="email" v-model="email" :maxlength="max_length" required>
                     </div>
                     <div class="form_group">
                         <label for="password">Password
                             <span> {{ password.length + '/' + max_pass_length }}</span>
                         </label>
-                        <input type="password" v-model="password" :maxlength="max_pass_length" required>
+                        <input type="password" name="password" id="password" v-model="password" :maxlength="max_pass_length" required>
                     </div>
                 </form>
-
-
                 <div v-if="error.length > 0"> {{error}}</div>
             </div>
+
             <!-- Add tweet -->
             <div class="tweetBox" v-else>
                 <h2>Welcome {{ userData.name }} write your first Tweet</h2>
@@ -60,34 +60,23 @@
                             <span> {{ tweetMsg.length + '/' + max_tweet }}</span>
                         </label>
                         <textarea name="tweet" id="tweet" cols="30" rows="10" v-model="tweetMsg"
-                            maxlength="200"></textarea>
+                            :maxlength="max_tweet"></textarea>
                     </div>
                     <button type="submit">Tweet</button>
                 </form>
-
             </div>
+
             <!-- Show all tweets -->
             <div class="card_tweets">
                 <section class="tweets" v-if="tweets.length > 0">
                     <h2>Tweets</h2>
-                    <div class="tweetMsg" v-for="(tweet, index) in tweets">
-                        <p>
-                            {{tweet.text}}
-                        </p>
-
-                        <div class="tweetDate">
-                            <i class="fas fa-calendar-alt fa-sm fa-fw"></i>{{tweet.date}}
-                        </div>
-                        <div class="tweet_remove" @click="removeTweet(index)">
-                            <span class="remove">Delete this tweet <i class="fas fa-trash fa-xs fa-fw"></i></span>
-                        </div>
-                    </div>
-
+                    <tweet-message v-for="(tweet, index) in tweets" v-bind:tweet="tweet" :key="index"
+                        @remove-tweet="removeTweet(index)"></tweet-message>
                 </section>
                 <div v-else>No tweets to show</div>
             </div>
-        </div>
 
+        </div>
     </div>
     <script src="./main.js"></script>
 </body>
